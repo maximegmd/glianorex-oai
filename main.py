@@ -3,7 +3,7 @@ import json
 import guidance
 import os
 
-from guidance import models, gen, user, select, assistant
+from guidance import models, gen, user, select, assistant, with_temperature
 
 ds = datasets.load_dataset('maximegmd/glianorex', split='test')
 ds_fr = ds.filter(lambda x: x['language'].startswith('fr'))
@@ -27,7 +27,7 @@ def compute(model, dataset):
         with user():
             lm += prompt
         with assistant():
-            lm += 'Answer: ' + select(options=['A', 'B', 'C', 'D'], name='choice', )
+            lm += 'Answer: ' + with_temperature(select(options=['A', 'B', 'C', 'D'], name='choice'), temperature = 0)
         r['acc'] = 1.0 if lm['choice'] == element['answer_idx'] else 0.0
         r['target'] = element['answer_idx']
              
